@@ -9,10 +9,22 @@ AMovingPlatform::AMovingPlatform()
 	SetMobility(EComponentMobility::Movable);
 }
 
+void AMovingPlatform::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (HasAuthority())
+	{
+		// Syncs movement over to the client
+		SetReplicates(true);
+		SetReplicateMovement(true);
+	}
+}
+
 void AMovingPlatform::Tick(float DeltaTime)
 {
 	// Only move on the server
-	// Nothing happens on client
+	// Nothing happens on client unless replicated
 	if (HasAuthority())
 	{
 		FVector Location = GetActorLocation();
